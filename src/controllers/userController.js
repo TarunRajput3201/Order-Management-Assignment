@@ -4,12 +4,10 @@ const {
     validateString,
     validateRequest,
     passwordLength,
-   
+   validateEmail,
+   validateObjectId
 } = require("../validator/validation");
-
-
-const validator = require('validator')
-
+const { find } = require("../models/orderModel");
 
 
 const regxValidator = function (val) {
@@ -58,7 +56,7 @@ const createUser = async function (req, res) {
         if (!validateString(user.email)) {
             return res.status(400).send({ status: false, message: "email is required" })
         }
-        if (!validator.isEmail(user.email)) {
+        if (!validateEmail(user.email)) {
             return res.status(400).send({ status: false, message: "email is not correct" })
         }
         const checkEmailId = await userModel.findOne({ email:user.email })
@@ -121,6 +119,30 @@ let userLogin = async function (req, res) {
     }
 }
 
+const getUser=async function(req,res){
+    try{
+        let userId=req.params.userId
+
+if (!validateObjectId(userId)) {
+    return res
+      .status(400)
+      .send({ status: false, msg: "Invalid customer id!" });
+  }
+
+  let user=await userModel.findById(userId)
+  
+    if(!user){
+    return res
+      .status(400)
+      .send({ status: false, msg: "user with this userId not exist" });
+  }
+  res.status(200).send({ status: true, message: "Success", data:user });
+}
+  catch (err) {
+
+    return res.status(500).send({ status: false, message: err.message })
+}
+}
 
 
-module.exports = { createUser, userLogin }
+module.exports = { createUser, userLogin,getUser }

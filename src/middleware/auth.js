@@ -1,12 +1,12 @@
 let jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
-const bookModel = require("../models/documentsModel")
+
 const {
 
   validateObjectId
 
 } = require("../validator/validation");
-const documentsModel = require("../models/documentsModel");
+
 
 const authenticate = function (req, res, next) {
   try {
@@ -59,7 +59,7 @@ const authorise = async function (req, res, next) {
         .send({ status: false, message: "Authorization failed." });
     }
 
-
+   
     next();
   } catch (err) {
     return res
